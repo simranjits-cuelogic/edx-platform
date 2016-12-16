@@ -161,8 +161,10 @@ class SequenceModule(SequenceFields, ProctoringFields, XModule):
     Layout module which lays out content in a temporal sequence
     """
     js = {
-        'coffee': [resource_string(__name__, 'js/src/sequence/display.coffee')],
-        'js': [resource_string(__name__, 'js/src/sequence/display/jquery.sequence.js')],
+        'js': [
+            resource_string(__name__, 'js/src/sequence/display/jquery.sequence.js'),
+            resource_string(__name__, 'js/src/sequence/display.js')
+        ],
     }
     css = {
         'scss': [resource_string(__name__, 'css/sequence/display.scss')],
@@ -525,7 +527,7 @@ class SequenceDescriptor(SequenceFields, ProctoringFields, MakoModuleDescriptor,
     show_in_read_only_mode = True
 
     js = {
-        'coffee': [resource_string(__name__, 'js/src/sequence/edit.coffee')],
+        'js': [resource_string(__name__, 'js/src/sequence/edit.js')],
     }
     js_module_name = "SequenceDescriptor"
 
