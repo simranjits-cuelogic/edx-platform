@@ -129,7 +129,7 @@
             * params:
             *   'position' can be any sequence position.
             */
-            return this.updatedProblems[position] !== void 0;
+            return typeof(this.updatedProblems[position]) !== 'undefined';
         };
 
         Sequence.prototype.hookUpProgressEvent = function() {
@@ -220,7 +220,7 @@
             var bookmarked, currentTab, modxFullUrl, sequenceLinks,
                 self = this;
             if (this.position !== newPosition) {
-                if (this.position !== void 0) {
+                if (this.position) {
                     this.mark_visited(this.position);
                     modxFullUrl = '' + this.ajaxUrl + '/goto_position';
                     $.postWithPrefix(modxFullUrl, {
