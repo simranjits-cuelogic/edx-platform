@@ -65,15 +65,15 @@
             this.el.on('bookmark:add', this.addBookmarkIconToActiveNavItem);
             this.el.on('bookmark:remove', this.removeBookmarkIconFromActiveNavItem);
             this.$('#sequence-list .nav-item').on('focus mouseenter', this.displayTabTooltip);
-            return this.$('#sequence-list .nav-item').on('blur mouseleave', this.hideTabTooltip);
+            this.$('#sequence-list .nav-item').on('blur mouseleave', this.hideTabTooltip);
         };
 
         Sequence.prototype.displayTabTooltip = function(event) {
-            return $(event.currentTarget).find('.sequence-tooltip').removeClass('sr');
+            $(event.currentTarget).find('.sequence-tooltip').removeClass('sr');
         };
 
         Sequence.prototype.hideTabTooltip = function(event) {
-            return $(event.currentTarget).find('.sequence-tooltip').addClass('sr');
+            $(event.currentTarget).find('.sequence-tooltip').addClass('sr');
         };
 
         Sequence.prototype.updatePageTitle = function() {
@@ -123,18 +123,18 @@
         };
 
         Sequence.prototype.enableButton = function(buttonClass, buttonAction) {
-            return this.$(buttonClass)
+            this.$(buttonClass)
                 .removeClass('disabled')
                 .removeAttr('disabled')
                 .click(buttonAction);
         };
 
         Sequence.prototype.disableButton = function(buttonClass) {
-            return this.$(buttonClass).addClass('disabled').attr('disabled', true);
+            this.$(buttonClass).addClass('disabled').attr('disabled', true);
         };
 
         Sequence.prototype.setButtonLabel = function(buttonClass, buttonLabel) {
-            return this.$(buttonClass + ' .sr').html(buttonLabel);
+            this.$(buttonClass + ' .sr').html(buttonLabel);
         };
 
         Sequence.prototype.updateButtonState = function(
@@ -142,11 +142,11 @@
         ) {
             var buttonLabel;
             if (isAtBoundary && boundaryUrl === 'None') {
-                return this.disableButton(buttonClass);
+                this.disableButton(buttonClass);
             } else {
                 buttonLabel = actionLabelPrefix + (isAtBoundary ? ' Subsection' : ' Unit');
                 this.setButtonLabel(buttonClass, buttonLabel);
-                return this.enableButton(buttonClass, buttonAction);
+                this.enableButton(buttonClass, buttonAction);
             }
         };
 
@@ -164,7 +164,7 @@
             // use inequality in case contents.length is 0 and position is 1.
             isLastTab = this.position >= this.contents.length;
             nextButtonClass = '.sequence-nav-button.button-next';
-            return this.updateButtonState(nextButtonClass, this.selectNext, 'Next', isLastTab, this.nextUrl);
+            this.updateButtonState(nextButtonClass, this.selectNext, 'Next', isLastTab, this.nextUrl);
         };
 
         Sequence.prototype.render = function(newPosition) {
@@ -198,7 +198,7 @@
                         var latestContent, latestResponse;
                         latestContent = latestData[0];
                         latestResponse = latestData[1];
-                        return self.content_container
+                        self.content_container
                             .find("[data-problem-id='" + problemId + "']")
                             .data('content', latestContent)
                             .data('problem-score', latestResponse.current_score)
@@ -264,16 +264,16 @@
                 alertText = interpolate(alertTemplate, {
                     tab_name: newPosition
                 }, true);
-                return alert(alertText);  // eslint-disable-line no-alert
+                alert(alertText);  // eslint-disable-line no-alert
             }
         };
 
         Sequence.prototype.selectNext = function(event) {
-            return this._change_sequential('next', event);
+            this._change_sequential('next', event);
         };
 
         Sequence.prototype.selectPrevious = function(event) {
-            return this._change_sequential('previous', event);
+            this._change_sequential('previous', event);
         };
 
         // `direction` can be 'previous' or 'next'
@@ -329,25 +329,25 @@
         Sequence.prototype.mark_visited = function(position) {
             // Don't overwrite class attribute to avoid changing Progress class
             var element = this.link_for(position);
-            return element.removeClass('inactive').removeClass('active').addClass('visited');
+            element.removeClass('inactive').removeClass('active').addClass('visited');
         };
 
         Sequence.prototype.mark_active = function(position) {
             // Don't overwrite class attribute to avoid changing Progress class
             var element = this.link_for(position);
-            return element.removeClass('inactive').removeClass('visited').addClass('active');
+            element.removeClass('inactive').removeClass('visited').addClass('active');
         };
 
         Sequence.prototype.addBookmarkIconToActiveNavItem = function(event) {
             event.preventDefault();
             this.el.find('.nav-item.active .bookmark-icon').removeClass('is-hidden').addClass('bookmarked');
-            return this.el.find('.nav-item.active .bookmark-icon-sr').text(gettext('Bookmarked'));
+            this.el.find('.nav-item.active .bookmark-icon-sr').text(gettext('Bookmarked'));
         };
 
         Sequence.prototype.removeBookmarkIconFromActiveNavItem = function(event) {
             event.preventDefault();
             this.el.find('.nav-item.active .bookmark-icon').removeClass('bookmarked').addClass('is-hidden');
-            return this.el.find('.nav-item.active .bookmark-icon-sr').text('');
+            this.el.find('.nav-item.active .bookmark-icon-sr').text('');
         };
 
         return Sequence;
