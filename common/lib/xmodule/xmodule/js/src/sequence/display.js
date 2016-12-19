@@ -9,44 +9,39 @@
         function Sequence(element) {
             var self = this;
 
-            /* eslint-disable no-unused-vars */
-            // This makes the .apply(self, arguments) pattern Coffeescript uses possible below
-
             this.removeBookmarkIconFromActiveNavItem = function(event) {
-                return Sequence.prototype.removeBookmarkIconFromActiveNavItem.apply(self, arguments);
+                return Sequence.prototype.removeBookmarkIconFromActiveNavItem.apply(self, [event]);
             };
             this.addBookmarkIconToActiveNavItem = function(event) {
-                return Sequence.prototype.addBookmarkIconToActiveNavItem.apply(self, arguments);
+                return Sequence.prototype.addBookmarkIconToActiveNavItem.apply(self, [event]);
             };
             this._change_sequential = function(direction, event) {
-                return Sequence.prototype._change_sequential.apply(self, arguments);
+                return Sequence.prototype._change_sequential.apply(self, [direction, event]);
             };
             this.selectPrevious = function(event) {
-                return Sequence.prototype.selectPrevious.apply(self, arguments);
+                return Sequence.prototype.selectPrevious.apply(self, [event]);
             };
             this.selectNext = function(event) {
-                return Sequence.prototype.selectNext.apply(self, arguments);
+                return Sequence.prototype.selectNext.apply(self, [event]);
             };
             this.goto = function(event) {
-                return Sequence.prototype.goto.apply(self, arguments);
+                return Sequence.prototype.goto.apply(self, [event]);
             };
             this.toggleArrows = function() {
-                return Sequence.prototype.toggleArrows.apply(self, arguments);
+                return Sequence.prototype.toggleArrows.apply(self);
             };
             this.updateProgress = function() {
-                return Sequence.prototype.updateProgress.apply(self, arguments);
+                return Sequence.prototype.updateProgress.apply(self);
             };
             this.addToUpdatedProblems = function(problemId, newContentState, newState) {
-                return Sequence.prototype.addToUpdatedProblems.apply(self, arguments);
+                return Sequence.prototype.addToUpdatedProblems.apply(self, [problemId, newContentState, newState]);
             };
             this.hideTabTooltip = function(event) {
-                return Sequence.prototype.hideTabTooltip.apply(self, arguments);
+                return Sequence.prototype.hideTabTooltip.apply(self, [event]);
             };
             this.displayTabTooltip = function(event) {
-                return Sequence.prototype.displayTabTooltip.apply(self, arguments);
+                return Sequence.prototype.displayTabTooltip.apply(self, [event]);
             };
-
-            /* eslint-enable no-unused-vars */
 
             this.updatedProblems = {};
             this.requestToken = $(element).data('request-token');
