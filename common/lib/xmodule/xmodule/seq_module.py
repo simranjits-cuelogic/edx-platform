@@ -517,7 +517,6 @@ class SequenceDescriptor(SequenceFields, ProctoringFields, MakoModuleDescriptor,
     """
     A Sequences Descriptor object
     """
-    mako_template = 'widgets/sequence-edit.html'
     module_class = SequenceModule
     resources_dir = None
 
