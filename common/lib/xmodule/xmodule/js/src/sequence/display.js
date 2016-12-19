@@ -251,7 +251,6 @@
                     widget_placement: widgetPlacement
                 });
 
-
                 // On Sequence change, destroy any existing polling thread
                 // for queued submissions, see ../capa/display.js
                 if (window.queuePollerID) {
