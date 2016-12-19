@@ -30,9 +30,6 @@
             this.toggleArrows = function() {
                 return Sequence.prototype.toggleArrows.apply(self);
             };
-            this.updateProgress = function() {
-                return Sequence.prototype.updateProgress.apply(self);
-            };
             this.addToUpdatedProblems = function(problemId, newContentState, newState) {
                 return Sequence.prototype.addToUpdatedProblems.apply(self, [problemId, newContentState, newState]);
             };
@@ -56,7 +53,6 @@
             this.nextUrl = this.el.data('next-url');
             this.prevUrl = this.el.data('prev-url');
             this.base_page_title = ' | ' + document.title;
-            this.initProgress();
             this.bind();
             this.render(parseInt(this.el.data('position'), 10));
         }
@@ -79,11 +75,6 @@
 
         Sequence.prototype.hideTabTooltip = function(event) {
             return $(event.currentTarget).find('.sequence-tooltip').addClass('sr');
-        };
-
-        Sequence.prototype.initProgress = function() {
-            // '#problem_#{id}' -> progress
-            this.progressTable = {};
         };
 
         Sequence.prototype.updatePageTitle = function() {
@@ -130,46 +121,6 @@
             *   'position' can be any sequence position.
             */
             return typeof(this.updatedProblems[position]) !== 'undefined';
-        };
-
-        Sequence.prototype.hookUpProgressEvent = function() {
-            return $('.problems-wrapper').bind('progressChanged', this.updateProgress);
-        };
-
-        Sequence.prototype.mergeProgress = function(p1, p2) {
-            // if either is 'NA', return the other one
-            var w1, w2;
-            if (p1 === 'NA') {
-                return p2;
-            }
-            if (p2 === 'NA') {
-                return p1;
-            }
-
-            // Both real progresses
-            if (p1 === 'done' && p2 === 'done') {
-                return 'done';
-            }
-
-            // not done, so if any progress on either, in_progress
-            w1 = p1 === 'done' || p1 === 'in_progress';
-            w2 = p2 === 'done' || p2 === 'in_progress';
-
-            if (w1 || w2) {
-                return 'in_progress';
-            }
-
-            return 'none';
-        };
-
-        Sequence.prototype.updateProgress = function() {
-            var newProgress = 'NA',
-                self = this;
-            $('.problems-wrapper').each(function() {
-                var progress = $(this).data('progress_status');
-                newProgress = self.mergeProgress(progress, newProgress);
-            });
-            this.progressTable[this.position] = newProgress;
         };
 
         Sequence.prototype.enableButton = function(buttonClass, buttonAction) {
@@ -260,7 +211,6 @@
                 this.position = newPosition;
                 this.toggleArrows();
                 this.hookUpContentStateChangeEvent();
-                this.hookUpProgressEvent();
                 this.updatePageTitle();
                 sequenceLinks = this.content_container.find('a.seqnav');
                 sequenceLinks.click(this.goto);
