@@ -23,6 +23,9 @@
             this.selectNext = function(event) {
                 return Sequence.prototype.selectNext.apply(self, [event]);
             };
+            this.keydownHandler = function(event) {
+                return Sequence.prototype.keydownHandler.apply(self, [event]);
+            };
             this.goto = function(event) {
                 return Sequence.prototype.goto.apply(self, [event]);
             };
@@ -39,6 +42,12 @@
                 return Sequence.prototype.displayTabTooltip.apply(self, [event]);
             };
 
+            this.arrowKeys = {
+                left: 37,
+                up: 38,
+                right: 39,
+                down: 40
+            };
             this.updatedProblems = {};
             this.requestToken = $(element).data('request-token');
             this.el = $(element).find('.sequence');
@@ -53,6 +62,7 @@
             this.prevUrl = this.el.data('prev-url');
             this.base_page_title = ' | ' + document.title;
             this.bind();
+            this.keydownHandler($(element).find('#sequence-list .tab'));
             this.render(parseInt(this.el.data('position'), 10));
         }
 
@@ -60,12 +70,64 @@
             return $(selector, this.el);
         };
 
-        Sequence.prototype.bind = function() {
+        Sequence.prototype.bind = function(event) {
             this.$('#sequence-list .nav-item').click(this.goto);
+            this.$('#sequence-list .nav-item').keypress(this.keyDownHandler);
             this.el.on('bookmark:add', this.addBookmarkIconToActiveNavItem);
             this.el.on('bookmark:remove', this.removeBookmarkIconFromActiveNavItem);
             this.$('#sequence-list .nav-item').on('focus mouseenter', this.displayTabTooltip);
             this.$('#sequence-list .nav-item').on('blur mouseleave', this.hideTabTooltip);
+        };
+
+        Sequence.prototype.previousTab = function(focused, index) {
+            var $navItemList,
+                $sequenceList = $(focused).parent().parent();
+            if (index === 0) {
+                $navItemList = $sequenceList.find('li').last();
+            } else {
+                $navItemList = $sequenceList.find('li:eq(' + index + ')').prev();
+            }
+            $navItemList.find('.tab').focus();
+            return false;
+        };
+
+        Sequence.prototype.nextTab = function(focused, index, total) {
+            var $navItemList,
+                $sequenceList = $(focused).parent().parent();
+            if (index === total) {
+                $navItemList = $sequenceList.find('li').first();
+            } else {
+                $navItemList = $sequenceList.find('li:eq(' + index + ')').next();
+            }
+            $navItemList.find('.tab').focus();
+            return false;
+        };
+
+        Sequence.prototype.keydownHandler = function(element) {
+            var self = this;
+            return element.keydown(function(event) {
+                var key = event.keyCode,
+                    focused = $(event.currentTarget),
+                    index = $(focused).parent().parent().find('li').index(focused.parent()),
+                    total = $(focused).parent().parent().find('li').size() - 1,
+                    $tab = $(focused).data('index');
+                switch (key) {
+                case self.arrowKeys.left:
+                case self.arrowKeys.up:
+                    event.preventDefault();
+                    self.previousTab(focused, index);
+                    break;
+
+                case self.arrowKeys.right:
+                case self.arrowKeys.down:
+                    event.preventDefault();
+                    self.nextTab(focused, index, total);
+                    break;
+
+                default:
+                    return true;
+                }
+            });
         };
 
         Sequence.prototype.displayTabTooltip = function(event) {
@@ -167,7 +229,7 @@
             this.updateButtonState(nextButtonClass, this.selectNext, 'Next', isLastTab, this.nextUrl);
         };
 
-        Sequence.prototype.render = function(newPosition) {
+        Sequence.prototype.render = function(newPosition, event) {
             var bookmarked, currentTab, modxFullUrl, sequenceLinks,
                 self = this;
             if (this.position !== newPosition) {
@@ -182,7 +244,7 @@
                 // On Sequence change, fire custom event 'sequence:change' on element.
                 // Added for aborting video bufferization, see ../video/10_main.js
                 this.el.trigger('sequence:change');
-                this.mark_active(newPosition);
+                this.mark_active(newPosition, event);
                 currentTab = this.contents.eq(newPosition - 1);
                 bookmarked = this.el.find('.active .bookmark-icon').hasClass('bookmarked');
 
@@ -328,13 +390,16 @@
         Sequence.prototype.mark_visited = function(position) {
             // Don't overwrite class attribute to avoid changing Progress class
             var element = this.link_for(position);
-            element.removeClass('inactive').removeClass('active').addClass('visited');
+            element.attr({'tabindex': '-1', 'aria-selected': 'false', 'aria-expanded': 'false'})
+                .removeClass('inactive').removeClass('active').addClass('visited');
         };
 
         Sequence.prototype.mark_active = function(position) {
             // Don't overwrite class attribute to avoid changing Progress class
             var element = this.link_for(position);
-            element.removeClass('inactive').removeClass('visited').addClass('active');
+            element.attr({'tabindex': '0', 'aria-selected': 'true', 'aria-expanded': 'true'})
+                .removeClass('inactive').removeClass('visited').addClass('active');
+            this.$('.sequence-list-wrapper').focus();
         };
 
         Sequence.prototype.addBookmarkIconToActiveNavItem = function(event) {

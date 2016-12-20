@@ -283,4 +283,9 @@ nav.sequence-bottom {
       color: $seq-nav-icon-color;
     }
   }
+
+  &:focus {
+    outline-color: $seq-nav-link-color;
+    outline-style: auto;
+  }
 }
