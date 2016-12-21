@@ -759,6 +759,13 @@ def upload_grades_csv(_xmodule_instance_args, _entry_id, course_id, _task_input,
         certificate_info_header
     )
 
+    class DummyGrade(object):
+        def __init__(self):
+            self.letter_grade = ""
+            self.percent = 0
+            self.graded_subsections_by_format = {}
+            self.grade_value = {'grade_breakdown': {}}
+
     for student, course_grade, err_msg in CourseGradeFactory().iter(course, enrolled_students):
         # Periodically update task status (this is a cache write)
         if task_progress.attempted % status_interval == 0:
@@ -779,9 +786,12 @@ def upload_grades_csv(_xmodule_instance_args, _entry_id, course_id, _task_input,
 
         if not course_grade:
             # An empty gradeset means we failed to grade a student.
-            task_progress.failed += 1
-            err_rows.append([student.id, student.username, err_msg])
-            continue
+            if err_msg == "User does not have access to this course" and (course.start > datetime.now().replace(tzinfo=UTC) or not course.start is None):
+                course_grade = DummyGrade()
+            else:
+                task_progress.failed += 1
+                err_rows.append([student.id, student.username, err_msg])
+                continue
 
         # We were able to successfully grade this student for this course.
         task_progress.succeeded += 1
@@ -813,7 +823,7 @@ def upload_grades_csv(_xmodule_instance_args, _entry_id, course_id, _task_input,
         certificate_info = certificate_info_for_user(
             student,
             course_id,
-            course_grade.letter_grade,
+            getattr(course_grade, 'letter_grade', ""),
             student.id in whitelisted_user_ids
         )
 
@@ -822,7 +832,7 @@ def upload_grades_csv(_xmodule_instance_args, _entry_id, course_id, _task_input,
             for subsection_location in assignment_info['subsection_headers']:
                 try:
                     subsection_grade = course_grade.graded_subsections_by_format[assignment_type][subsection_location]
-                except KeyError:
+                except (KeyError, AttributeError):
                     grade_results.append([u'Not Available'])
                 else:
                     if subsection_grade.graded_total.attempted:
