@@ -1,10 +1,12 @@
 """
 Helper functions for bok_choy test tasks
 """
+import errno
 import sys
 import os
 import time
 import httplib
+from socket import error as socket_error
 import subprocess
 from paver import tasks
 from paver.easy import sh, task, cmdopts, needs
@@ -92,6 +94,14 @@ def wait_for_server(server, port):
             if int(response.status) == 200:
                 server_ok = True
                 break
+
+        # TODO: in python 3.3, socket.error is deprecated in favor of ConnectionRefusedError
+        except socket_error as s_error:
+            # We expect this error until the server comes up
+            if s_error.errno == errno.ECONNREFUSED and attempts == 0 :
+                # Give it a few more seconds, it takes
+                # a bit for the server to come up initially
+                time.sleep(10)
         except:  # pylint: disable=bare-except
             pass
 
