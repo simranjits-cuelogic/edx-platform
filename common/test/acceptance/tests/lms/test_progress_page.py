@@ -3,9 +3,10 @@
 End-to-end tests for the LMS that utilize the
 progress page.
 """
-from bok_choy.javascript import js_defined
-from contextlib import contextmanager
 import ddt
+
+from bok_choy.javascript import js_defined, wait_for_js
+from contextlib import contextmanager
 from nose.plugins.attrib import attr
 
 from ..helpers import (
@@ -125,6 +126,7 @@ class ProgressPageBaseTest(UniqueCourseTest):
 
 @ddt.ddt
 @js_defined('window.jQuery')
+@flaky.flaky(max_runs=20, min_passes=20)
 class PersistentGradesTest(ProgressPageBaseTest):
     """
     Test that grades for completed assessments are persisted
@@ -134,6 +136,7 @@ class PersistentGradesTest(ProgressPageBaseTest):
         super(PersistentGradesTest, self).setUp()
         self.instructor_dashboard_page = InstructorDashboardPage(self.browser, self.course_id)
 
+    @wait_for_js
     def _change_subsection_structure(self):
         """
         Adds a unit to the subsection, which
