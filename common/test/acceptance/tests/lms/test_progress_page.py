@@ -4,6 +4,7 @@ End-to-end tests for the LMS that utilize the
 progress page.
 """
 import ddt
+import flaky
 
 from bok_choy.javascript import js_defined, wait_for_js
 from contextlib import contextmanager
