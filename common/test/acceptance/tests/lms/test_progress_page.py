@@ -127,7 +127,7 @@ class ProgressPageBaseTest(UniqueCourseTest):
 
 @ddt.ddt
 @js_defined('window.jQuery')
-@flaky.flaky(max_runs=20, min_passes=20)
+@flaky.flaky(max_runs=20, min_passes=19)
 class PersistentGradesTest(ProgressPageBaseTest):
     """
     Test that grades for completed assessments are persisted
