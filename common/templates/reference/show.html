@@ -1,0 +1,49 @@
+## mako
+<%!
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
+%>
+<%namespace name='static' file='../static_content.html'/>
+
+<%inherit file="../main.html" />
+
+<%block name="pagetitle">
+${_("Reference Details")}
+</%block>
+
+<%block name="content">
+<section class="container reference-section outside-app">
+  <h1>${_("Reference Information.")}</h1>
+  <table>
+    <tbody>
+      <tr>
+        <th>Reference Name</th>
+        <td>${reference.reference_name}</td>
+      </tr>
+      <tr>
+        <th>Reference Type</th>
+        <td>${reference.reference_type}</td>
+      </tr>
+      <tr>
+        <th>Reference Link</th>
+        <td>${reference.reference_link}</td>
+      </tr>
+      <tr>
+        <th>Reference Description</th>
+        <td>${reference.reference_description}</td>
+      </tr>
+      <tr>
+        <th>Reference Status</th>
+        <td>${reference.reference_status}</td>
+      </tr>
+      <tr>
+        <th></th>
+        <td>
+          <a href="/reference/references/${reference.id}/edit/">Edit</a> |
+          <a href="/reference/references">List</a>
+          </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+</%block>

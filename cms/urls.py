@@ -63,6 +63,9 @@ urlpatterns = patterns(
 
     # Darklang View to change the preview language (or dark language)
     url(r'^update_lang/', include('openedx.core.djangoapps.dark_lang.urls', namespace='dark_lang')),
+
+    #SIMRAN reference URL's
+    url(r'^reference/', include('reference.urls', namespace='custom_reference')),
 )
 
 # restful api

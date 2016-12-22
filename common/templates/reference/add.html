@@ -1,0 +1,44 @@
+## mako
+<%!
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
+%>
+<%namespace name='static' file='../static_content.html'/>
+
+<%inherit file="../main.html" />
+
+<%block name="pagetitle">
+${_("Add Reference")}
+</%block>
+
+<%block name="content">
+<section class="container reference-section outside-app">
+  <h1>${_("Reference Information")}</h1>
+
+  <form class="form-horizontal" method="post" enctype="multipart/form-data">
+    <div class="col-md-12">
+      <fieldset>
+        <input type="hidden" name="csrfmiddlewaretoken" value="${ csrf_token }" />
+        % for field in form:
+        <div class="field">
+          <span class="text-danger">${field.errors} </span>
+          <small class="">${field.help_text}</small>
+          ${field.label}
+          <div class="col-sm-10">
+            ${ field }
+          </div>
+        </div>
+        % endfor
+      </fieldset>
+      <div class="btn-set">
+        <div class="text-right save-btn">
+         <a href="/reference/references" class="custom-btn">Discard</a>
+       </div>
+       <div class="text-right save-btn">
+        <input class="custom-btn" type="submit" name='save'
+        value="Save" />
+      </div>
+    </div>
+  </form>
+</section>
+</%block>

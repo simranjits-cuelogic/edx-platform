@@ -2145,6 +2145,9 @@ INSTALLED_APPS = (
 
     # additional release utilities to ease automation
     'release_util',
+
+    # SIMRAN  -- custom app
+    'reference',
 )
 
 # Migrations which are not in the standard module "migrations"

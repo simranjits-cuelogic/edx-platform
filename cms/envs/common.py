@@ -215,6 +215,8 @@ FEATURES = {
 
     # Show Language selector
     'SHOW_LANGUAGE_SELECTOR': False,
+
+    'ALLOW_ALL_ADVANCED_COMPONENTS': True,
 }
 
 ENABLE_JASMINE = False
@@ -944,6 +946,9 @@ INSTALLED_APPS = (
 
     # management of user-triggered async tasks (course import/export, etc.)
     'user_tasks',
+
+    # SIMRAN  -- custom app
+    'reference',
 )
 
 

@@ -1,0 +1,56 @@
+## mako
+<%!
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
+%>
+<%namespace name='static' file='../static_content.html'/>
+
+<%inherit file="../main.html" />
+
+<%block name="pagetitle">
+${_("Reference")}
+</%block>
+
+<%block name="content">
+<section class="container reference-section outside-app">
+  <h1>${_("Reference List")}</h1>
+  <div class="text-right add-btn-section">
+      <a href="/reference/references/add/" class="custom-btn">Add New</a>
+  </div>
+    % if reference_list:
+
+        <table class="table">
+            <thead>
+                <th>reference name</th>
+                <th>reference type</th>
+                <th>reference link</th>
+                <th>reference description</th>
+                <th>reference status</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+            % for reference in reference_list:
+                <tr>
+                    <td>${reference.reference_name}</td>
+                    <td>${reference.reference_type}</td>
+                    <td>
+                        <a href="${reference.reference_link}" target="_blank">
+                            ${reference.reference_link}
+                        </a>
+                    </td>
+                    <td>${reference.reference_description}</td>
+                    <td>${reference.reference_status}</td>
+                    <td>
+                        <a href="/reference/references/${reference.id}/">Show</a> |
+                        <a href="/reference/references/${reference.id}/edit/">Edit</a> |
+                        <a href="/reference/references/${reference.id}/delete/">Delete</a>
+                    </td>
+                </tr>
+            % endfor
+            </tbody>
+        </table>
+    % else:
+        <div class="text-center">Empty Bucket!!</div>
+    % endif
+</section>
+</%block>
